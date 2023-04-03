@@ -1,0 +1,57 @@
+service: serverlessSWAPI
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-1
+  apiGateway:
+    shouldStartNameWithService: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:eu-west-1:549617601652:table/Persona
+  
+plugins:
+  - serverless-auto-swagger
+  - serverless-offline
+
+functions:
+  registrarPersona:
+    handler: src/handlers/persona/registrarPersona.registrarPersona
+    events:
+      - http:
+          method: POST
+          path: "/api/persona"
+  listarPersona:
+    handler: src/handlers/persona/listarPersona.listarPersona
+    events:
+      - http:
+          method: GET
+          path: "/api/persona"
+  traerPersona:
+    handler: src/handlers/persona/traerPersona.traerPersona
+    events:
+      - http:
+          method: GET
+          path: "/api/persona/{id}"
+
+resources:
+  Resources:
+    Persona:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Persona
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+
+
