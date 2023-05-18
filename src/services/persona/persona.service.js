@@ -5,8 +5,7 @@ module.exports.verPersona = async (id) => {
 
   const persona = await swapi.people({ 
     id: id 
-  }).then((response) => response)
-    .catch((error) => {});
+  }).then((response) => response).catch((error) => {});
 
   if (!persona?.name) {
     return null;

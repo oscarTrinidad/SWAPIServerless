@@ -1,7 +1,7 @@
 const { obtenerPersona } = require("../process/obtenerPersona");
 
 describe("obtenerPersona", () => {
-  test("Cliente enontrado. Responde con un objeto",async()=>{
+  test("Cliente encontrado. Responde con un objeto",async()=>{
     const response = await obtenerPersona(1);
     expect(response).toBeInstanceOf(Object);
   });
