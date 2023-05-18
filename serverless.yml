@@ -1,20 +1,27 @@
 service: serverlessSWAPI
 
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
+  stage: dev
   region: eu-west-1
   apiGateway:
     shouldStartNameWithService: true
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:*
-      Resource:
-        - arn:aws:dynamodb:eu-west-1:549617601652:table/Persona
-  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: "dynamodb:*"
+          Resource: "arn:aws:dynamodb:eu-west-1:549617601652:table/Persona"
+        - Effect: Allow
+          Action: "lambda:*"
+          Resource: "*"
+        - Effect: Allow
+          Action: "apigateway:*"
+          Resource: "*"
+
 plugins:
   - serverless-auto-swagger
   - serverless-offline
@@ -22,18 +29,24 @@ plugins:
 functions:
   registrarPersona:
     handler: src/handlers/persona/registrarPersona.registrarPersona
+    memorySize: 128 # mb
+    timeout: 30 # seconds
     events:
       - http:
           method: POST
           path: "/api/persona"
   listarPersona:
     handler: src/handlers/persona/listarPersona.listarPersona
+    memorySize: 128 # mb
+    timeout: 30 # seconds
     events:
       - http:
           method: GET
           path: "/api/persona"
   traerPersona:
     handler: src/handlers/persona/traerPersona.traerPersona
+    memorySize: 128 # mb
+    timeout: 30 # seconds
     events:
       - http:
           method: GET
@@ -52,6 +65,3 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-
-
-
